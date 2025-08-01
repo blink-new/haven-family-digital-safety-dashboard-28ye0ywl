@@ -135,14 +135,24 @@ export function ModeSelector({ currentMode, onModeChange, className = '' }: Mode
   const [isOpen, setIsOpen] = useState(false)
   const [selectedMode, setSelectedMode] = useState<HavenMode>(currentMode)
 
+  // Update selectedMode when currentMode prop changes
+  useEffect(() => {
+    console.log('ModeSelector: currentMode prop changed to:', currentMode)
+    setSelectedMode(currentMode)
+  }, [currentMode])
+
   const currentConfig = modeConfigs.find(config => config.id === currentMode)
 
   const handleModeSelect = (mode: HavenMode) => {
+    console.log('ModeSelector: handleModeSelect called with mode:', mode)
     setSelectedMode(mode)
     // Trigger mode change immediately
     onModeChange(mode)
     // Close dialog after a brief delay to allow state to update
-    setTimeout(() => setIsOpen(false), 100)
+    setTimeout(() => {
+      console.log('ModeSelector: Closing dialog after mode change')
+      setIsOpen(false)
+    }, 200)
   }
 
   return (

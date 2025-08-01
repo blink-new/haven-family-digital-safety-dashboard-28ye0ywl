@@ -364,6 +364,9 @@ export function MobileOptimizedOrbitHomepage() {
   const { score: cyberScoreData, isLoading: scoreLoading, performScan, isScanning } = useCyberScore()
   const { alerts, getAlertCounts } = useSecurityAlerts()
   
+  // Debug current mode
+  console.log('MobileOptimizedOrbitHomepage: Current mode is:', mode)
+  
   const [selectedModal, setSelectedModal] = useState<string | null>(null)
   const [showReward, setShowReward] = useState(false)
   const [completedActions, setCompletedActions] = useState<Set<string>>(new Set())
@@ -474,7 +477,13 @@ export function MobileOptimizedOrbitHomepage() {
       <header className="relative z-10 p-4 bg-white/80 backdrop-blur-md border-b border-gray-200">
         <div className="flex items-center justify-between mb-4">
           <HavenLogo size="md" />
-          <ModeSelector currentMode={mode} onModeChange={setMode} />
+          <ModeSelector 
+            currentMode={mode} 
+            onModeChange={(newMode) => {
+              console.log('MobileOptimizedOrbitHomepage: onModeChange called with:', newMode)
+              setMode(newMode)
+            }} 
+          />
         </div>
         
         {/* Prominent Score Display */}

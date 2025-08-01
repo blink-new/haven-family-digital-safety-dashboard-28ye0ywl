@@ -38,35 +38,21 @@ export function useHavenMode() {
     }
   }, [])
 
-  // Listen for mode changes from other components
-  useEffect(() => {
-    const handleModeChange = (event: CustomEvent) => {
-      const newMode = event.detail.mode as HavenMode
-      if (newMode && ['simple', 'family', 'pro', 'silent'].includes(newMode)) {
-        setState(prev => ({ ...prev, mode: newMode, error: null }))
-      }
-    }
-
-    window.addEventListener('havenModeChanged', handleModeChange as EventListener)
-    
-    return () => {
-      window.removeEventListener('havenModeChanged', handleModeChange as EventListener)
-    }
-  }, [])
+  // Listen for mode changes from other components (removed redundant event listener)
 
   // Update mode and save to localStorage
   const setMode = useCallback((newMode: HavenMode) => {
+    console.log('useHavenMode: setMode called with:', newMode)
     try {
       // Update state immediately for instant UI response
-      setState(prev => ({ ...prev, mode: newMode, error: null }))
+      setState(prev => {
+        console.log('useHavenMode: Updating state from', prev.mode, 'to', newMode)
+        return { ...prev, mode: newMode, error: null }
+      })
       
       // Save to localStorage
       localStorage.setItem(HAVEN_MODE_STORAGE_KEY, newMode)
-      
-      // Force a re-render by dispatching a custom event
-      window.dispatchEvent(new CustomEvent('havenModeChanged', { 
-        detail: { mode: newMode } 
-      }))
+      console.log('useHavenMode: Saved to localStorage:', newMode)
       
       // Optional: Track mode changes for analytics
       if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -77,7 +63,7 @@ export function useHavenMode() {
         })
       }
       
-      console.log('Mode changed to:', newMode)
+      console.log('useHavenMode: Mode changed to:', newMode)
     } catch (error) {
       console.error('Failed to save Haven mode to localStorage:', error)
       setState(prev => ({ 
